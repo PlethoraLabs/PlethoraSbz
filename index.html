@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>SBZ | PlethoraLabs</title>
+
+	<!-- Font Awesome | https://fontawesome.com/get-started -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+
+	<!-- Bulma.io | https://cdnjs.com/libraries/bulma -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+
+	<!-- Clipboard -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+
+	<style>
+		#main-container { margin-top: 50px; }
+		.hidden {
+			visibility: hidden;
+		}
+		.sub_textarea {
+			box-shadow: 0px 0px 32px rgba(0,0,0,0.2); 
+			font-size : 18px;
+			padding   : 10px 40px;
+			width     : 100%;
+			height    : 280px;
+    	}
+	</style>
+</head>
+<body>
+
+	<div id="main-container" class="container has-text-centered">
+		<div class="columns">
+			<div class="column">
+
+				<h2 class="title">Add your subtitles here:</h2>
+				<textarea class="sub_textarea" name="subs" id="subs"></textarea>
+
+				<div class="field has-addons" style="margin-top: 10px;">
+				  <p class="control">
+				    <input  name="resync" id="resync" class="input is-large is-rounded" type="text" placeholder="0">
+				  </p>
+				  <p class="control">
+				    <a class="resync-button button is-info is-large is-rounded">
+				      Resync (ms)
+					  <span style="margin-left: 10px;" class="icon is-medium is-right hidden">
+					    <i class="fas fa-check"></i>
+					  </span>
+				    </a>
+
+
+				  </p>
+				</div>
+
+			</div>
+			<div class="column">
+
+				<h2 class="title">Output</h2>
+				<textarea class="sub_textarea" name="output" id="output"></textarea>
+
+				<!-- Trigger -->
+				<button style="margin-top: 10px;" class="button copy-to-clipboard is-large is-rounded is-info" data-clipboard-target="#output">
+					<i class="fa fa-clipboard"></i>
+					<span style="margin-left:10px;">Copy to Clipboard</span>
+				</button>
+				
+			</div>
+		</div>	
+	</div>
+	
+<!-- https://github.com/gsantiago/subtitle.js -->
+<script src="subtitle.bundle.js"></script>
+<script>
+
+	document.addEventListener("DOMContentLoaded", ()=>{
+		
+		let clipboard = new ClipboardJS('.copy-to-clipboard');
+		let dummy = `
+1
+00:00:20,000 --> 00:00:26,000
+Let me make an analogy
+between programs and recipes.
+
+2
+00:00:26,100 --> 00:00:31,100
+A program is a lot like a recipe.
+Each one is a list of steps to be-
+
+3
+00:00:31,200 --> 00:00:34,200
+-carried out with rules for
+how to tell when you're done-
+
+4
+00:00:34,300 --> 00:00:40,000
+-or when to go back. At
+the end there's a certain result.
+
+5
+00:00:40,100 --> 00:00:44,100
+If you cook you probably
+exchange recipes with your friends-
+
+6
+00:00:44,200 --> 00:00:48,200
+-and you probably change recipes too.
+
+7
+00:00:48,300 --> 00:00:53,300
+If you've made changes and you,
+and your friends, like eating it-
+
+8
+00:00:53,400 --> 00:00:58,400
+-then you might give them
+the changed version of the recipe.
+
+9
+00:00:58,500 --> 00:01:02,500
+Imagine a world where you
+can't change the recipe-
+
+10
+00:01:02,600 --> 00:01:08,600
+-because somebody has gone
+out of his way to make it impossible.
+		`;
+
+		let $subs = document.querySelector("#subs"); $subs.value = dummy;
+		let $output = document.querySelector("#output");
+		let $resync = document.querySelector("#resync");
+		let $resyncBtn = document.querySelector(".resync-button");
+
+		$resyncBtn.addEventListener("click", function(e){
+
+			let subs      = Subtitle.parse(dummy);
+			let resyncVal = Number($resync.value);
+			subs          = Subtitle.resync(subs, resyncVal);
+			subs          = Subtitle.stringify( subs );
+			$output.value = subs;
+
+		});
+
+
+	});
+
+</script>
+</body>
+</html>
