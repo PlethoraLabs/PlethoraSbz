@@ -133,7 +133,7 @@ out of his way to make it impossible.
 
 		$resyncBtn.addEventListener("click", function(e){
 
-			let subs      = Subtitle.parse(dummy);
+			let subs      = Subtitle.parse($resync.value);
 			let resyncVal = Number($resync.value);
 			subs          = Subtitle.resync(subs, resyncVal);
 			subs          = Subtitle.stringify( subs );
